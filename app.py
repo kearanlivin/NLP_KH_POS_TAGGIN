@@ -1,15 +1,17 @@
 import os
 import pickle
-import re
 import json
-from pathlib import Path
 import streamlit as st
-import joblib
+try:
+    import joblib
+except Exception:
+    # joblib may not be installed in the runtime; fall back to None and use pickle fallback in load_model
+    joblib = None
 import pandas as pd
 from khmernltk import word_tokenize
 
 # Config
-MODEL_PATH = r"/mount/src/nlp_kh_pos_taggin/khmer_pos_crf_model.pkl"
+MODEL_PATH = r"D:\User\USER.ME\NLP_KH_POS_TAGGIN\khmer_pos_crf_model.pkl"  # Update with your model path
 
 st.set_page_config(page_title="Khmer POS Tagging", layout="wide")
 
@@ -132,9 +134,7 @@ if st.session_state["model"] is None and st.session_state["model_error"] == "":
         st.session_state["model"] = load_model(MODEL_PATH)
     except Exception as e:
         st.session_state["model_error"] = str(e)
-
-# ---- Sidebar navigation ----
-LOGO_PATH = r"/mount/src/nlp_kh_pos_taggin/CADT_logo.png"
+LOGO_PATH = r"D:\User\USER.ME\NLP_KH_POS_TAGGIN\CADT_logo.png"
 if os.path.exists(LOGO_PATH):
     try:
         st.sidebar.image(LOGO_PATH, width=180)  # adjust width as needed
@@ -143,6 +143,8 @@ if os.path.exists(LOGO_PATH):
         try:
             with open(LOGO_PATH, "rb") as f:
                 st.sidebar.image(f.read(), width=180)
+        except Exception:
+            pass
         except Exception:
             pass
         
