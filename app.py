@@ -227,7 +227,7 @@ if menu == "Sentence Input":
             placeholder="វាយឃ្លាខ្មែរ​ទៅ​នេះ...",
             key="input_area",
         )
-        generate = st.button("Generate")
+        generate = st.button("POS TAG SUBMIT")
         st.session_state["input_text"] = txt
 
     with col2:
