@@ -327,7 +327,7 @@ elif menu == "Guidelines & POS Summary":
 
     st.subheader("24 POS Tag Summary")
     tags_list = [
-        "NOUN", "VERB", "ADJ", "ADV", "PRON", "NUM", "DET", "CONJ",
+        "NOUN", "VERB", "ADJ", "ADV", "PRON or PN", "NUM", "DET", "CONJ",
         "ADP", "PROPN", "PART", "INTJ", "AUX", "PUNCT", "SYM", "X",
         "CLF", "POST", "NEG", "DEM", "POS", "ORD", "QUANT", "COP"
     ]
