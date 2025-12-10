@@ -1,6 +1,6 @@
 # requirements.txt
 streamlit
-khmernltk
+nltk
 joblib
 pandas
 numpy
