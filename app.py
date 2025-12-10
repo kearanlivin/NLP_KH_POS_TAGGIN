@@ -11,7 +11,7 @@ import pandas as pd
 from khmernltk import word_tokenize
 
 # Config
-MODEL_PATH = r"D:\User\USER.ME\NLP_KH_POS_TAGGIN\khmer_pos_crf_model.pkl"  # Update with your model path
+MODEL_PATH = r"khmer_pos_crf_model.pkl"  # Update with your model path
 
 st.set_page_config(page_title="Khmer POS Tagging", layout="wide")
 
@@ -134,7 +134,7 @@ if st.session_state["model"] is None and st.session_state["model_error"] == "":
         st.session_state["model"] = load_model(MODEL_PATH)
     except Exception as e:
         st.session_state["model_error"] = str(e)
-LOGO_PATH = r"D:\User\USER.ME\NLP_KH_POS_TAGGIN\CADT_logo.png"
+LOGO_PATH = r"CADT_logo.png"
 if os.path.exists(LOGO_PATH):
     try:
         st.sidebar.image(LOGO_PATH, width=180)  # adjust width as needed
