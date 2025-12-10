@@ -1,0 +1,7 @@
+# requirements.txt
+streamlit
+khmernltk
+joblib
+pandas
+numpy
+python-crfsuite
