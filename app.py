@@ -10,8 +10,22 @@ except Exception:
 import pandas as pd
 from khmernltk import word_tokenize
 
-# Config
-MODEL_PATH = r"khmer_pos_crf_model.pkl"  # Update with your model path
+# Config: resolve model path robustly
+# Prefer a file named 'crf_pos_tag.joblib' located next to this app.py.
+# Fallback to current working directory.
+_APP_DIR = os.path.dirname(os.path.abspath(__file__))
+_DEFAULT_MODEL_NAME = "crf_pos_tag.joblib"
+_CANDIDATE_PATHS = [
+    os.path.join(_APP_DIR, _DEFAULT_MODEL_NAME),
+    os.path.join(os.getcwd(), _DEFAULT_MODEL_NAME),
+]
+for _p in _CANDIDATE_PATHS:
+    if os.path.exists(_p):
+        MODEL_PATH = _p
+        break
+else:
+    # If not found, keep a sensible default path (next to app.py)
+    MODEL_PATH = _CANDIDATE_PATHS[0]
 
 st.set_page_config(page_title="Khmer POS Tagging", layout="wide")
 
@@ -32,7 +46,7 @@ for k, v in {
 # ---- Utilities ----
 def load_model(path):
     if not os.path.exists(path):
-        raise FileNotFoundError(f"Model not found: {path}")
+        raise FileNotFoundError(f"Model not found: {os.path.abspath(path)}")
     try:
         return joblib.load(path)
     except Exception:
@@ -183,6 +197,23 @@ st.sidebar.markdown("""
 # Optional: add a footer with version or contact
 st.sidebar.markdown("---")
 st.sidebar.caption("Version 1.0")
+
+# Optional: allow user to upload a custom model file if default not found
+st.sidebar.markdown("---")
+st.sidebar.markdown("### Load Custom Model (optional)")
+uploaded_model = st.sidebar.file_uploader("Upload .joblib or .pkl model", type=["joblib", "pkl"], help="Use this if the default model file is missing.")
+if uploaded_model is not None:
+    try:
+        # Save to a temporary path under app directory
+        tmp_model_path = os.path.join(_APP_DIR, f"uploaded_{_DEFAULT_MODEL_NAME}")
+        with open(tmp_model_path, "wb") as _out:
+            _out.write(uploaded_model.read())
+        st.session_state["model"] = load_model(tmp_model_path)
+        st.session_state["model_error"] = ""
+        st.sidebar.success("Custom model loaded successfully.")
+    except Exception as e:
+        st.session_state["model_error"] = f"Failed to load uploaded model: {e}"
+        st.sidebar.error(st.session_state["model_error"])
 
 
 # --- Helper: extract sentences from uploaded json ---
